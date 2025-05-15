@@ -10,7 +10,7 @@ import {
   View,
 } from 'react-native';
 import { PostsProvider } from '../context/PostsContext';
-import { ACCENT, theme } from '../theme'; // import ACCENT
+import { ACCENT, theme } from '../theme';
 
 export default function RootLayout() {
   const [loading, setLoading] = useState(false);

@@ -1,5 +1,5 @@
 // app/home.tsx
-import { Card, Icon, Image, Text, useTheme } from '@rneui/themed';
+import { Avatar, Card, Icon, Image, Text } from '@rneui/themed';
 import { Stack, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
@@ -9,10 +9,12 @@ import {
     View,
     useWindowDimensions,
 } from 'react-native';
+import { ACCENT } from '../../theme';
 
 type Post = {
   id: string;
   userName: string;
+  avatarUrl: string;
   imageUrl: string;
   timestamp: string;
   caption: string;
@@ -26,7 +28,8 @@ const initialPosts: Post[] = [
   {
     id: '1',
     userName: 'alice',
-    imageUrl: 'https://picsum.photos/400/300?image=10',
+    avatarUrl: 'https://i.pravatar.cc/150?u=alice',
+    imageUrl: 'https://picsum.photos/400/300?random=1',
     timestamp: '1h ago',
     caption: 'Sunset in the city',
     likes: 12,
@@ -37,7 +40,8 @@ const initialPosts: Post[] = [
   {
     id: '2',
     userName: 'bob',
-    imageUrl: 'https://picsum.photos/400/300?image=20',
+    avatarUrl: 'https://i.pravatar.cc/150?u=bob',
+    imageUrl: 'https://picsum.photos/400/300?random=2',
     timestamp: '2h ago',
     caption: 'Morning coffee',
     likes: 5,
@@ -45,19 +49,65 @@ const initialPosts: Post[] = [
     dislikes: 1,
     disliked: false,
   },
-  // …add more if you like
+  {
+    id: '3',
+    userName: 'carol',
+    avatarUrl: 'https://i.pravatar.cc/150?u=carol',
+    imageUrl: 'https://picsum.photos/400/300?random=3',
+    timestamp: '3h ago',
+    caption: 'Cozy reading nook',
+    likes: 8,
+    liked: false,
+    dislikes: 0,
+    disliked: false,
+  },
+  {
+    id: '4',
+    userName: 'dave',
+    avatarUrl: 'https://i.pravatar.cc/150?u=dave',
+    imageUrl: 'https://picsum.photos/400/300?random=4',
+    timestamp: '4h ago',
+    caption: 'Mountain trails',
+    likes: 20,
+    liked: false,
+    dislikes: 2,
+    disliked: false,
+  },
+  {
+    id: '5',
+    userName: 'eve',
+    avatarUrl: 'https://i.pravatar.cc/150?u=eve',
+    imageUrl: 'https://picsum.photos/400/300?random=5',
+    timestamp: '5h ago',
+    caption: 'City lights',
+    likes: 15,
+    liked: false,
+    dislikes: 1,
+    disliked: false,
+  },
+  {
+    id: '6',
+    userName: 'frank',
+    avatarUrl: 'https://i.pravatar.cc/150?u=frank',
+    imageUrl: 'https://picsum.photos/400/300?random=6',
+    timestamp: '6h ago',
+    caption: 'Beach vibes',
+    likes: 9,
+    liked: false,
+    dislikes: 0,
+    disliked: false,
+  },
 ];
 
 export default function HomeScreen() {
   const [posts, setPosts] = useState(initialPosts);
-  const { theme } = useTheme();
   const router = useRouter();
   const { width } = useWindowDimensions();
   const cardWidth = Math.min(width * 0.9, 400);
 
   const toggleLike = (id: string) => {
-    setPosts((prev) =>
-      prev.map((p) => {
+    setPosts(prev =>
+      prev.map(p => {
         if (p.id !== id) return p;
         let { liked, likes, disliked, dislikes } = p;
         if (disliked) {
@@ -72,8 +122,8 @@ export default function HomeScreen() {
   };
 
   const toggleDislike = (id: string) => {
-    setPosts((prev) =>
-      prev.map((p) => {
+    setPosts(prev =>
+      prev.map(p => {
         if (p.id !== id) return p;
         let { liked, likes, disliked, dislikes } = p;
         if (liked) {
@@ -89,7 +139,18 @@ export default function HomeScreen() {
 
   const renderPost = ({ item }: { item: Post }) => (
     <Card containerStyle={[styles.card, { width: cardWidth }]}>
-      <Text style={styles.caption}>{item.caption}</Text>
+      <View style={styles.header}>
+        <Avatar
+          source={{ uri: item.avatarUrl }}
+          rounded
+          size={40}
+          containerStyle={{ marginRight: 12 }}
+        />
+        <Text numberOfLines={1} ellipsizeMode="tail" style={styles.headerText}>
+          <Text style={styles.username}>@{item.userName}</Text>
+          <Text style={styles.captionInline}> {item.caption}</Text>
+        </Text>
+      </View>
 
       <Card.Divider style={styles.divider} />
 
@@ -106,7 +167,7 @@ export default function HomeScreen() {
           name={item.liked ? 'heart' : 'heart-o'}
           type="font-awesome"
           onPress={() => toggleLike(item.id)}
-          color={item.liked ? 'red' : theme.colors.primary}
+          color={item.liked ? 'red' : ACCENT}
           containerStyle={styles.actionIcon}
         />
         <Text style={styles.count}>{item.likes}</Text>
@@ -115,7 +176,7 @@ export default function HomeScreen() {
           name={item.disliked ? 'thumbs-down' : 'thumbs-o-down'}
           type="font-awesome"
           onPress={() => toggleDislike(item.id)}
-          color={item.disliked ? 'red' : theme.colors.primary}
+          color={item.disliked ? 'red' : ACCENT}
           containerStyle={[styles.actionIcon, { marginLeft: 32 }]}
         />
         <Text style={styles.count}>{item.dislikes}</Text>
@@ -130,12 +191,12 @@ export default function HomeScreen() {
           headerShown: true,
           title: 'Feed',
           headerStyle: { backgroundColor: '#000' },
-          headerTitleStyle: { color: theme.colors.primary },
+          headerTitleStyle: { color: ACCENT },
           headerLeft: () => (
             <Icon
               name="home"
               type="font-awesome"
-              color={theme.colors.primary}
+              color={ACCENT}
               onPress={() => router.replace('/home')}
               containerStyle={{ marginLeft: 16 }}
             />
@@ -144,7 +205,7 @@ export default function HomeScreen() {
             <Icon
               name="cog"
               type="font-awesome"
-              color={theme.colors.primary}
+              color={ACCENT}
               onPress={() => router.push('/settings')}
               containerStyle={{ marginRight: 16 }}
             />
@@ -156,7 +217,7 @@ export default function HomeScreen() {
       <SafeAreaView style={styles.container}>
         <FlatList
           data={posts}
-          keyExtractor={(p) => p.id}
+          keyExtractor={p => p.id}
           renderItem={renderPost}
           contentContainerStyle={styles.list}
           showsVerticalScrollIndicator={false}
@@ -177,10 +238,22 @@ const styles = StyleSheet.create({
     backgroundColor: '#111111',
     elevation: 4,
   },
-  caption: {
-    color: '#e0e0e0',
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
     padding: 12,
+  },
+  headerText: {
+    flex: 1,
     fontSize: 16,
+    color: '#e0e0e0',
+  },
+  username: {
+    color: ACCENT,
+    fontWeight: 'bold',
+  },
+  captionInline: {
+    color: '#e0e0e0',
   },
   divider: {
     backgroundColor: '#222222',

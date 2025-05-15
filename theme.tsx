@@ -1,7 +1,7 @@
 // theme.ts
 import { createTheme } from '@rneui/themed';
 
-// Your one source of truth for the neon-green accent
+// Your one source of truth for the neon‐green accent
 export const ACCENT = '#00ff7f';
 
 export const theme = createTheme({
